@@ -412,3 +412,68 @@ ashuc1
 
 <img src="dockerbs.png">
 
+
+## COntainerization of any application 
+
+## Code/app --- Dockerfile -- Build -- image -- container 
+
+
+<img src="build.png">
+
+### SOFTWARE installer introduction 
+
+<img src="soft.png">
+
+### Build first docker image 
+
+```
+❯ cd python
+❯ ls
+Dockerfile hello.py
+❯ docker  build  -t  ashucisco:pycodev1  .
+Sending build context to Docker daemon  3.584kB
+Step 1/6 : FROM centos
+ ---> 300e315adb2f
+Step 2/6 : MAINTAINER  ashutoshh@linux.com
+ ---> Running in e9f9e1011b6b
+Removing intermediate container e9f9e1011b6b
+ ---> d39e6cda7cd1
+Step 3/6 : RUN  yum install python3 -y
+ ---> Running in 97118b0c1849
+CentOS Linux 8 - AppStream                       31 MB/s | 7.4 MB     00:00    
+CentOS Linux 8 - BaseOS                          46 MB/s | 2.6 MB     00:00    
+CentOS Linux 8 - Extras                      
+
+
+```
+
+### checking images 
+
+```
+ docker   images
+REPOSITORY    TAG        IMAGE ID       CREATED              SIZE
+varunfirst    python     5bfbbfb82f32   1 second ago         252MB
+vishnucisco   pycodev    ebba736a45ad   23 seconds ago       252MB
+sushil_p      1.0.0      c93c4a3efff9   About a minute ago   252MB
+ashucisco     pycodev1   640ebf86fb2b   About a minute ago   252MB
+
+```
+
+### creating container from that docker image
+
+```
+❯ docker  run  -itd  --name  ashuc2  ashucisco:pycodev1
+a53c07b5114ec2d62b4da166aadd397e79505a69afc8ae5d44ed8d4fff921eed
+❯ docker  ps
+CONTAINER ID   IMAGE                COMMAND                  CREATED          STATUS          PORTS     NAMES
+a53c07b5114e   ashucisco:pycodev1   "python3 /mydata/hel…"   35 seconds ago   Up 34 seconds             ashuc2
+
+```
+
+### to check output of default process
+
+```
+docker  logs  -f   ashuc2 
+```
+
+
