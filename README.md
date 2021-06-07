@@ -505,4 +505,25 @@ b808f1735941
 
 ```
 
+### Dockerfile example with static webapp 
+
+<img src="dfile_static.png">
+
+## Building docker image 
+
+```
+❯ docker  build  -t  ashuhttp:ciscowebv1 .
+Sending build context to Docker daemon  63.49kB
+Step 1/7 : FROM centos
+ ---> 300e315adb2f
+Step 2/7 : LABEL  "author.name"="ashutoshh"
+ ---> Running in 137917b00d7c
+Removing intermediate container 137917b00d7c
+ ---> ed556c215707
+Step 3/7 : LABEL  "author.email"="ashutoshh@linux.com"
+ ---> Running in 5b0b30955115
+ 
+ ```
+ 
+ 
 
