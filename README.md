@@ -525,5 +525,47 @@ Step 3/7 : LABEL  "author.email"="ashutoshh@linux.com"
  
  ```
  
+ ## creating containers 
  
+ ```
+ ❯ docker  run -itd --name ashuwebc1  -p  8511:80 ashuhttp:ciscowebv1
+f55272604cf76c68e68e85dba958179d93d6e53911258b29fd1feca03638fce5
+❯ docker  ps
+CONTAINER ID   IMAGE                 COMMAND                CREATED         STATUS         PORTS                  NAMES
+f55272604cf7   ashuhttp:ciscowebv1   "httpd -DFOREGROUND"   6 seconds ago   Up 4 seconds   0.0.0.0:8511->80/tcp   ashuwebc1
+
+
+```
+
+## Image transfer 
+
+<img src="shareimg.png">
+
+## Image registry options 
+
+<img src="reg.png">
+
+## docker image name reality 
+
+<img src="name.png">
+
+## PUshing image to docker hub 
+
+```
+❯ docker  tag  ashuhttp:ciscowebv1   dockerashu/ashuhttp:ciscowebv1
+❯ docker  login -u dockerashu
+Password: 
+Login Succeeded
+❯ docker  push  dockerashu/ashuhttp:ciscowebv1
+The push refers to repository [docker.io/dockerashu/ashuhttp]
+d01f2bd0b253: Pushed 
+2140864c34fc: Pushed 
+2653d992f4ef: Mounted from library/centos 
+ciscowebv1: digest: sha256:ff5916a0bc6691996ecb8376f92f6ea0ec129dd9b34d77cd4cf423cdba42f335 size: 950
+❯ docker  logout
+Removing login credentials for https://index.docker.io/v1/
+
+```
+
+
 
