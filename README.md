@@ -476,4 +476,33 @@ a53c07b5114e   ashucisco:pycodev1   "python3 /mydata/hel…"   35 seconds ago   
 docker  logs  -f   ashuc2 
 ```
 
+## tips 
+
+### kill all running containers
+
+```
+❯ docker kill $(docker ps -q)
+422c8204301b
+361a24907ffa
+594f929c5526
+
+```
+
+### remove all stopped containers 
+
+```
+❯ docker rm   $(docker ps -qa)  -f
+c9f6d41933b1
+15170fff2dc4
+ad5f7589a36e
+37b1f3ddfad8
+2f41a1327b49
+efb5078c5479
+a2112809100a
+e4e65acab87d
+278a98b35688
+b808f1735941
+
+```
+
 
