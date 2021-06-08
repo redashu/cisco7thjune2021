@@ -138,6 +138,69 @@ Installing dependencies:
 10070  docker  logs  -f  ashujc1
 
 ```
+# Docker networking 
+
+## Network topology 
+
+<img src="nettop.png">
+
+### creating container with docker bridge ip 
+
+```
+❯ docker  run  -tid --name ashuc1  alpine  ping localhost
+9d73d2c2803d2799a2ee41d19b96b623663f6a2ca26a17c68b563fce6c0f7a01
+❯ docker  ps
+CONTAINER ID   IMAGE     COMMAND            CREATED         STATUS         PORTS     NAMES
+9d73d2c2803d   alpine    "ping localhost"   5 seconds ago   Up 3 seconds             ashuc1
+❯ docker  exec  -it  ashuc1  sh
+/ # ifconfig 
+eth0      Link encap:Ethernet  HWaddr 02:42:AC:11:00:02  
+          inet addr:172.17.0.2  Bcast:172.17.255.255  Mask:255.255.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:10 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:836 (836.0 B)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:46 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:46 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:3864 (3.7 KiB)  TX bytes:3864 (3.7 KiB)
+
+
+```
+
+### best way to check IP address of a container 
+
+```
+❯ docker  inspect  netcon1   --format='{{.NetworkSettings.IPAddress}}'
+172.17.0.3
+❯ docker  inspect  ashuc1   --format='{{.NetworkSettings.IPAddress}}'
+172.17.0.2
+❯ docker  inspect  manishax1  --format='{{.NetworkSettings.IPAddress}}'
+172.17.0.4
+
+```
+
+## NAT concept is already there if ANy container wants to connect outside host 
+
+<img src="nat.png">
+
+## POrt forwarding rule 
+
+<img src="portf.png">
+
+## docker0 Bridge is never preffered 
+
+<img src="no2docker0.png">
+
+## TIme to use custom bridge 
+
+<img src="cb.png">
+
 
 
 
