@@ -373,3 +373,110 @@ e68c23e24cc3   ashubr1         bridge    local
 
 <img src="overlay.png">
 
+
+### Removing all docker network 
+
+```
+❯ docker  network  prune
+WARNING! This will remove all custom networks not used by at least one container.
+Are you sure you want to continue? [y/N] y
+Deleted Networks:
+khalidbr1
+varun1
+vishnu_bridge
+ashubr2
+manishBr2
+manishBr1
+ashubr1
+derpaul
+derpaul-192-168-131-0
+sushil_bridge
+vishnu_bridge1
+khalidbr2
+varun2
+
+❯ docker  network  ls
+NETWORK ID     NAME      DRIVER    SCOPE
+4bcd7319e5ae   bridge    bridge    local
+8a72dcd00a22   host      host      local
+d4808136d167   none      null      local
+
+```
+
+## Docker storage concept 
+
+<img src="st.png">
+
+### attaching and preparing storage for Docker Engine 
+
+```
+[root@ip-172-31-27-216 ~]# lsblk 
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+nvme0n1       259:0    0  100G  0 disk 
+|-nvme0n1p1   259:1    0  100G  0 part /
+`-nvme0n1p128 259:2    0    1M  0 part 
+nvme1n1       259:3    0   50G  0 disk 
+[root@ip-172-31-27-216 ~]# mkfs.xfs   /dev/nvme1n1 
+meta-data=/dev/nvme1n1           isize=512    agcount=4, agsize=3276800 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=0
+data     =                       bsize=4096   blocks=13107200, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=6400, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+[root@ip-172-31-27-216 ~]# mkdir  /mnt/cisco
+[root@ip-172-31-27-216 ~]# 
+[root@ip-172-31-27-216 ~]# 
+[root@ip-172-31-27-216 ~]# mount  /dev/nvme1n1   /mnt/cisco/
+[root@ip-172-31-27-216 ~]# 
+[root@ip-172-31-27-216 ~]# vim  /etc/fstab 
+[root@ip-172-31-27-216 ~]# cat /etc/fstab 
+#
+UUID=7b355c6b-f82b-4810-94b9-4f3af651f629     /           xfs    defaults,noatime  1   1
+/dev/nvme1n1   /mnt/cisco/    xfs  defaults  0 0 
+
+```
+
+### if you have storage mounted then as Docker engineer 
+
+```
+[root@ip-172-31-27-216 ~]# cd  /etc/sysconfig/
+[root@ip-172-31-27-216 sysconfig]# ls
+acpid       clock     docker          init        modules          nfs            rpc-rquotad  run-parts  sysstat.ioconf
+atd         console   docker-storage  irqbalance  netconsole       raid-check     rpcbind      selinux
+authconfig  cpupower  grub            keyboard    network          rdisc          rsyncd       sshd
+chronyd     crond     i18n            man-db      network-scripts  readonly-root  rsyslog      sysstat
+[root@ip-172-31-27-216 sysconfig]# vim  docker
+[root@ip-172-31-27-216 sysconfig]# cat  docker
+# The max number of open files for the daemon itself, and all
+# running containers.  The default value of 1048576 mirrors the value
+# used by the systemd service unit.
+DAEMON_MAXFILES=1048576
+
+# Additional startup options for the Docker daemon, for example:
+# OPTIONS="--ip-forward=true --iptables=true"
+# By default we limit the number of open files per container
+OPTIONS="--default-ulimit nofile=1024:4096   -g  /mnt/cisco/"
+
+# How many seconds the sysvinit script waits for the pidfile to appear
+# when starting the daemon.
+DAEMON_PIDFILE_TIMEOUT=10
+[root@ip-172-31-27-216 sysconfig]# systemctl daemon-reload 
+[root@ip-172-31-27-216 sysconfig]# systemctl restart  docker 
+
+
+```
+
+### to sync data  from /var/lib/docker. -- /mnt/docker 
+
+```
+rsync -avp  /var/lib/docker/  /mnt/cisco/
+
+```
+
+## Container storage 
+
+<img src="ctst.png">
+
