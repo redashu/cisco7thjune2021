@@ -81,4 +81,63 @@ always
 
 ```
 
+## Java code based Dockerifle 
+
+```
+❯ ls
+hello.java      java.dockerfile
+❯ docker  build  -t  ashujava:ciscov1  .
+unable to prepare context: unable to evaluate symlinks in Dockerfile path: lstat /Users/fire/Desktop/ciscoapps/java/Dockerfile: no such file or directory
+❯ docker  build  -t  ashujava:ciscov1   -f java.dockerfile   .
+Sending build context to Docker daemon  3.584kB
+Step 1/7 : FROM openjdk
+latest: Pulling from library/openjdk
+5a581c13a8b9: Extracting  22.58MB/42.18MB
+26cd02acd9c2: Download complete 
+66727af51578: Download complete 
+
+
+```
+
+
+## Dockerfile with JDK install and use 
+
+```
+❯ ls
+hello.java            installjdk.dockerfile java.dockerfile
+❯ docker build -t  new:jdk8 -f  installjdk.dockerfile  .
+Sending build context to Docker daemon  4.608kB
+Step 1/8 : FROM oraclelinux:8.3
+ ---> 816d99f0bbe8
+Step 2/8 : MAINTAINER ashutoshh
+ ---> Running in 6cd264e021a2
+Removing intermediate container 6cd264e021a2
+ ---> bf55fec68e85
+Step 3/8 : RUN dnf install java-1.8.0-openjdk.x86_64 -y
+ ---> Running in ebf6fb6b8640
+Oracle Linux 8 BaseOS Latest (x86_64)           152 MB/s |  35 MB     00:00    
+Oracle Linux 8 Application Stream (x86_64)      138 MB/s |  28 MB     00:00    
+Last metadata expiration check: 0:00:06 ago on Tue Jun  8 07:10:55 2021.
+Dependencies resolved.
+================================================================================================
+ Package                       Arch    Version                          Repository          Size
+================================================================================================
+Installing:
+ java-1.8.0-openjdk            x86_64  1:1.8.0.292.b10-1.el8_4          ol8_appstream      335 k
+Installing dependencies:
+ aajohan-comfortaa-fonts       noarch  3.001-2.el8                      ol8_baseos_latest  148 k
+ 
+ 
+ ```
+ 
+ ### Creating container of java normal code
+ 
+ ```
+ docker  run -itd --name ashujc1 --restart  always --memory=300M --cpu-shares=20 6e6f2fb28805 
+10069  docker  stats
+10070  docker  logs  -f  ashujc1
+
+```
+
+
 
