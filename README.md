@@ -645,3 +645,43 @@ docker  run  -it --name  x35  -v   /etc/passwd:/hello.txt:ro  centos bash
 
 ```
 
+## MYsql DB with VOlume 
+
+```
+❯ docker  volume  create ashudbvol
+ashudbvol
+❯ docker  run -itd --name ashudbc1 -e  MYSQL_ROOT_PASSWORD
+
+❯ docker  run -itd --name ashudbc1 -e  MYSQL_ROOT_PASSWORD=CiscoDb099  -v  ashudbvol:/var/lib/mysql   mysql
+Unable to find image 'mysql:latest' locally
+latest: Pulling from library/mysql
+69692152171a: Already exists 
+1651b0be3df3: Pull complete 
+951da7386bc8: Pull complete 
+0f86c95aa242: Pull complete 
+
+
+```
+
+## login into MYsqlDB container 
+
+```
+❯ docker  exec  -it   ashudbc1   bash
+root@f92a509e865c:/# mysql -u root  -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.25 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+
+```
+
+
