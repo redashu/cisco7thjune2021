@@ -201,6 +201,175 @@ lo        Link encap:Local Loopback
 
 <img src="cb.png">
 
+## default docker bridges
+
+<img src="dbr.png">
+
+### Detailed infor about Docker0 bridge 
+
+```
+❯ docker  network  inspect  bridge
+[
+    {
+        "Name": "bridge",
+        "Id": "4bcd7319e5ae51c503a51f115e78a8025320b9e93442afda62f214ae1bab8dbb",
+        "Created": "2021-06-08T05:59:26.985047106Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "081a8eb54ff679e7e7b938973759249ade1bb37eec6b1aea68fc38481ed3567a": {
+                "Name": "netcon1",
+                "EndpointID": "b34d090895e42a9f396834f29313259eb9c5c43c7b117df7792f9724d5a08306",
+                "MacAddress": "02:42:ac:11:00:03",
+                "IPv4Address": "172.17.0.3/16",
+                "IPv6Address": ""
 
 
+```
+
+### Container without any networking 
+
+```
+❯ docker run -it --rm  --network  none  busybox sh
+/ # 
+/ # 
+/ # ifconfig 
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ # ping 172.17.0.2
+PING 172.17.0.2 (172.17.0.2): 56 data bytes
+ping: sendto: Network is unreachable
+/ # ping google.com 
+ping: bad address 'google.com'
+/ # exit
+❯ 
+
+```
+
+
+
+### Container with Host Address 
+
+```
+❯ docker run -it --rm  --network  host   busybox sh
+/ # ifconfig 
+docker0   Link encap:Ethernet  HWaddr 02:42:11:20:B0:EE  
+          inet addr:172.17.0.1  Bcast:172.17.255.255  Mask:255.255.0.0
+          inet6 addr: fe80::42:11ff:fe20:b0ee/64 Scope:Link
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:56955 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:60608 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:4396503 (4.1 MiB)  TX bytes:181527421 (173.1 MiB)
+
+eth0      Link encap:Ethernet  HWaddr 0A:8A:E5:C1:E3:A3  
+          inet addr:172.31.27.216  Bcast:172.31.31.255  Mask:255.255.240.0
+          inet6 addr: fe80::88a:e5ff:fec1:e3a3/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:9001  Metric:1
+          RX packets:615435 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:159858 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:748548363 (713.8 MiB)  TX bytes:82032381 (78.2 MiB)
+
+
+```
+
+## creating custom bridge 
+
+```
+❯ docker  network  create   ashubr1
+e68c23e24cc35d9bdd9cf65401896fdf0e9df1c3f019e725105bb6e9c0a30eb8
+❯ docker network  ls
+NETWORK ID     NAME      DRIVER    SCOPE
+e68c23e24cc3   ashubr1   bridge    local
+4bcd7319e5ae   bridge    bridge    local
+8a72dcd00a22   host      host      local
+d4808136d167   none      null      local
+
+```
+
+### Details about bridge 
+
+```
+❯ docker network  inspect  ashubr1
+[
+    {
+        "Name": "ashubr1",
+        "Id": "e68c23e24cc35d9bdd9cf65401896fdf0e9df1c3f019e725105bb6e9c0a30eb8",
+        "Created": "2021-06-08T09:21:28.892331464Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+
+
+```
+
+### create bridge with custom subnet 
+
+```
+❯ docker  network  create   ashubr2  --subnet 192.168.20.0/24
+99b78dcc8af078596f957d0029807ff503bf61858fbc94517e6808e066e783aa
+❯ docker network  ls
+NETWORK ID     NAME            DRIVER    SCOPE
+e68c23e24cc3   ashubr1         bridge    local
+99b78dcc8af0   ashubr2         bridge    local
+
+```
+
+### creating containers 
+
+```
+
+10123  docker  network  create   ashubr2  --subnet 192.168.20.0/24    
+10124  docker network  ls
+10125  history
+10126  docker network  ls
+10127  docker  run -itd --name ashuc1  --network ashubr1   alpine ping 127.0.0.1 
+10128  docker  run -itd --name ashuc2  --network ashubr1   alpine ping 127.0.0.1 
+10129  docker  run -itd --name ashuc3  --network ashubr2   alpine ping 127.0.0.1 
+10130  docker  run -itd --name ashuc4  --network ashubr2 --ip 192.168.20.100  alpine ping 127.0.0.1 
+
+```
+
+### Docker network drivers 
+
+<img src="driver.png">
+
+### Overlay driver 
+
+<img src="overlay.png">
 
