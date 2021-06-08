@@ -480,3 +480,168 @@ rsync -avp  /var/lib/docker/  /mnt/cisco/
 
 <img src="ctst.png">
 
+
+## creating volume 
+
+```
+❯ docker  volume  create  ashuvol1
+ashuvol1
+❯ docker  volume   ls
+DRIVER    VOLUME NAME
+local     ashuvol1
+
+
+❯ docker  volume   inspect  ashuvol1
+[
+    {
+        "CreatedAt": "2021-06-08T11:09:47Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/mnt/cisco/volumes/ashuvol1/_data",
+        "Name": "ashuvol1",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+
+
+```
+
+
+### creating a container 
+
+```
+❯ docker run -itd --name ashuc1 -v  ashuvol1:/mydata:rw    alpine
+c7cdc3ac4fc414c758d74d8a871af789ae93d059525c8fc4e08a108b61adb081
+❯ docker  ps
+CONTAINER ID   IMAGE     COMMAND     CREATED         STATUS         PORTS     NAMES
+c7cdc3ac4fc4   alpine    "/bin/sh"   7 seconds ago   Up 4 seconds             ashuc1
+
+```
+
+### create data 
+
+```
+❯ docker run -itd --name ashuc1 -v  ashuvol1:/mydata:rw    alpine
+c7cdc3ac4fc414c758d74d8a871af789ae93d059525c8fc4e08a108b61adb081
+❯ docker  ps
+CONTAINER ID   IMAGE     COMMAND     CREATED         STATUS         PORTS     NAMES
+c7cdc3ac4fc4   alpine    "/bin/sh"   7 seconds ago   Up 4 seconds             ashuc1
+❯ docker  exec -it  ashuc1  sh
+/ # ls
+bin     etc     lib     mnt     opt     root    sbin    sys     usr
+dev     home    media   mydata  proc    run     srv     tmp     var
+/ # cd  /mydata/
+/mydata # ls
+/mydata # mkdir  hello world 
+/mydata # echo  "Hey Guys "  >data.txt 
+/mydata # ls
+data.txt  hello     world
+/mydata # 
+
+
+```
+
+### reading data from a different container 
+
+```
+❯ docker  run -it  --rm  -v ashuvol1:/okk:ro   centos bash
+[root@5a891845118e /]# 
+[root@5a891845118e /]# 
+[root@5a891845118e /]# 
+[root@5a891845118e /]# cd  /okk/
+[root@5a891845118e okk]# ls
+data.txt  hello  world
+[root@5a891845118e okk]# 
+[root@5a891845118e okk]# 
+[root@5a891845118e okk]# rmdir world/
+rmdir: failed to remove 'world/': Read-only file system
+[root@5a891845118e okk]# ls
+data.txt  hello  world
+[root@5a891845118e okk]# exit
+exit
+
+
+```
+
+### multiple volume for a single container 
+
+```
+❯ docker run -itd --name ashuc1 -v  ashuvol1:/mydata:rw  -v  ashuvol2:/hellocisco:ro   alpine
+eb77b2d2616cbf68e8017a463f73953715ccc480f53ad7efad5ac22447f15e9f
+❯ docker  volume  ls
+DRIVER    VOLUME NAME
+local     ashuvol1
+local     ashuvol2
+
+```
+
+### POrtainer deploy as container 
+
+```
+docker  run  -tid --name webui --restart always  --memory 300M  -v  /var/run/docker.sock:/var/run/docker.sock  -p 8900:9000  portainer/portainer
+```
+
+### Data to container 
+
+```
+❯ docker  run  -itd --name  x33  -v   /etc:/myetc:ro   centos bash
+f047e079258a00babd77fa8c7184ed84b6027acbe04ccac4419a5c5b97014605
+❯ docker  exec -it  x33  bash
+[root@f047e079258a /]# ls
+bin  dev  etc  home  lib  lib64  lost+found  media  mnt  myetc	opt  proc  root  run  sbin  srv  sys  tmp  usr	var
+[root@f047e079258a /]# cd  myetc/
+[root@f047e079258a myetc]# ls
+DIR_COLORS		 cron.d		    group-		 libnl		    os-release	      request-key.d  sudo-ldap.conf
+DIR_COLORS.256color	 cron.daily	    grub.d		 libuser.conf	    pam.d	      resolv.conf    sudo.conf
+DIR_COLORS.lightbgcolor  cron.deny	    grub2.cfg		 locale.conf	    passwd	      rpc	     sudoers
+GREP_COLORS		 cron.hourly	    gshadow		 localtime	    passwd-	      rpm	     sudoers.d
+GeoIP.conf		 cron.monthly	    gshadow-		 login.defs	    pip.conf	      rsyncd.conf    sysconfig
+GeoIP.conf.default	 cron.weekly	    gss			 logrotate.conf     pkcs11	      rsyslog.conf   sysctl.conf
+NetworkManager		 crontab	  
+
+```
+
+### mounting a file into a container 
+
+```
+docker  run  -it --name  x35  -v   /etc/passwd:/hello.txt:ro  centos bash  
+
+```
+
+## docker volume history 
+
+```
+10016  docker  volume  create  ashuvol1
+10017  docker  volume   ls
+10018  docker  volume   inspect  ashuvol1 
+10019  docker  volume   ls
+10020  docker run -itd --name ashuc1 -v  ashuvol1:/mydata:rw    alpine    
+10021  docker  ps
+10022  docker  exec -it  ashuc1  sh 
+10023  docker  ps
+10024  docker  rm  ashuc1  -f
+10025  docker  volume  ls
+10026  docker  run -it  --rm  -v ashuvol1:/okk:ro   centos bash 
+10027  history
+10028  docker run -itd --name ashuc1 -v  ashuvol1:/mydata:rw  -v  ashuvol2:/hellocisco:ro   alpine 
+10029  docker  volume  ls
+10030  history
+10031* docker  context  ls
+10032  docker  run  -tid --name webui --restart policy --memory 300M  -v  /var/run/docker.sock:/var/run/docker.sock  -p 8900:9000  portainer/portainer
+10033  docker  run  -tid --name webui --restart always  --memory 300M  -v  /var/run/docker.sock:/var/run/docker.sock  -p 8900:9000  portainer/portainer
+10034  docker  ps
+10035  history
+10036* docker  context  use default 
+10037* docker  ps
+10038* docker  rm  webui -f
+10039* docker  context  use  awsDE
+10040  docker  run  -itd --name  x33  -v   /etc:/myetc:ro   centos bash
+10041  docker  exec -it  x33  bash 
+10042  history
+10043  docker  run  -itd --name  x34  -v   /etc:/hello.txt:ro  centos bash  
+10044  docker  ps
+10045  docker  run  -it --name  x35  -v   /etc/passwd:/hello.txt:ro  centos bash  
+
+```
+
