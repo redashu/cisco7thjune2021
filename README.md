@@ -685,3 +685,8 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 ```
 
 
+## Docker compose 
+
+<img src="compose.png">
+
+
