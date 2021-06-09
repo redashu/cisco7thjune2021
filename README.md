@@ -500,3 +500,31 @@ PING google.com (172.217.164.142): 56 data bytes
 ```
 
 
+### check yaml of a running pod 
+
+```
+❯ kubectl  get  po  sushilpod111  -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/podIP: 192.168.34.9/32
+    cni.projectcalico.org/podIPs: 192.168.34.9/32
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"name":"sushilpod111","namespace":"default"},"spec":{"containers":[{"command":["ping","yahoo.com"],"image":"alpine","name":"sushil-assignment-c1"}]}}
+  creationTimestamp: "2021-06-09T10:31:59Z"
+  name: sushilpod111
+  namespace: default
+  resourceVersion: "35555"
+  uid: 82e4a0c0-088e-4de4-aa49-822918a9eff1
+spec:
+  containers:
+  - command:
+    - ping
+    - yahoo.com
+    image: alpine
+    imagePullPolicy: Always
+    name: sushil-assignment-c1
+
+```
+
