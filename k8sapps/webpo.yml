@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod  # requesting something related to POD -- /create/delete /update 
+metadata: # info about any KInd written above 
+ name: ashupod-1  # name of pod 
+spec:
+ containers: # info about containers 
+ - name: ashuc1  # name of container 
+   image: dockerashu/ashuhttp:ciscowebv1  # image from DockerHUb
+   ports: # this field is optional these days 
+   - containerPort: 80 # docker image app port number 
