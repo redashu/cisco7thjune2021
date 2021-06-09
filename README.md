@@ -165,4 +165,53 @@ services:
 
 <img src="tools.png">
 
+## K8s info 
+
+<img src="k8s.png">
+
+## K8s architecuter 
+
+### hardware 
+
+<img src="k8s1.png">
+
+## Master Node COmponents 
+
+### KUbe-apiserver 
+
+<img src="api.png">
+
+### KUbenetes client 
+
+<img src="kubectl.png">
+
+### kube-schedular 
+
+<img src="schedular.png">
+
+### kube-controller-manager 
+
+<img src="kubec.png">
+
+### Node controller 
+
+<img src="nc.png">
+
+### ETCD 
+
+<img src="etcd.png">
+
+## Container NEtworking. by CNI in K8s 
+
+<img src="cni.png">
+
+### Minion Side CNI bridge for container networking 
+
+<img src="cnibr.png">
+
+### Minion Side container communication -- 
+
+
+<img src="kubep.png">
+
 
