@@ -363,5 +363,140 @@ CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPAC
 ```
 
 
+## COntext in Kubernetes we can use to switch clusters 
+
+### current list of contexts 
+
+```
+❯ kubectl  config  get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+          kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   
+*         minikube                      minikube     minikube           default
+
+```
+
+### checking nodes 
+
+```
+❯ kubectl  get  nodes
+NAME       STATUS   ROLES                  AGE    VERSION
+minikube   Ready    control-plane,master   2d6h   v1.20.2
+
+```
+
+### switching contexts 
+
+```
+❯ kubectl  config  use-context   kubernetes-admin@kubernetes
+Switched to context "kubernetes-admin@kubernetes".
+❯ kubectl  config  get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   
+          minikube                      minikube     minikube           default
+❯ kubectl  get  nodes
+NAME                           STATUS   ROLES                  AGE     VERSION
+ip-172-31-82-89.ec2.internal   Ready    control-plane,master   5h24m   v1.21.1
+ip-172-31-85-18.ec2.internal   Ready    <none>                 5h23m   v1.21.1
+ip-172-31-86-48.ec2.internal   Ready    <none>                 5h23m   v1.21.1
+ip-172-31-89-48.ec2.internal   Ready    <none>                 5h23m   v1.21.1
+
+```
+
+## workflow to deploy any docker image in kubernetes cluster 
+
+<img src="workflow.png">
+
+## Docker image to POD history 
+
+<img src="pod.png">
+
+### POD more details 
+
+<img src="pod1.png">
+
+## Deploying first pod 
+
+### checking syntax of yaml using dry-run 
+
+```
+❯ ls
+ashupod1.yaml
+❯ kubectl  apply -f  ashupod1.yaml  --dry-run=client
+pod/ashupod-1 created (dry run)
+
+```
+
+### deploy POD 
+
+```
+❯ kubectl  apply -f  ashupod1.yaml
+pod/ashupod-1 created
+❯ kubectl  get  pods
+NAME        READY   STATUS              RESTARTS   AGE
+ashupod-1   0/1     ContainerCreating   0          9s
+
+```
+
+###  checking pod info in more detailed
+
+```
+❯ kubectl  get  nodes
+NAME                           STATUS   ROLES                  AGE    VERSION
+ip-172-31-82-89.ec2.internal   Ready    control-plane,master   6h9m   v1.21.1
+ip-172-31-85-18.ec2.internal   Ready    <none>                 6h7m   v1.21.1
+ip-172-31-86-48.ec2.internal   Ready    <none>                 6h7m   v1.21.1
+ip-172-31-89-48.ec2.internal   Ready    <none>                 6h7m   v1.21.1
+❯ kubectl  get  po  ashupod-1   -o wide
+NAME        READY   STATUS    RESTARTS   AGE   IP               NODE                           NOMINATED NODE   READINESS GATES
+ashupod-1   1/1     Running   0          14m   192.168.10.131   ip-172-31-85-18.ec2.internal   <none>           <none>
+
+
+```
+
+### PODs and its info 
+
+```
+❯ kubectl  get   po  -o wide
+NAME           READY   STATUS    RESTARTS   AGE     IP               NODE                           NOMINATED NODE   READINESS GATES
+ashipod-1      1/1     Running   0          56s     192.168.34.5     ip-172-31-86-48.ec2.internal   <none>           <none>
+ashupod-1      1/1     Running   0          15m     192.168.10.131   ip-172-31-85-18.ec2.internal   <none>           <none>
+derpaulpod1    1/1     Running   0          14m     192.168.10.133   ip-172-31-85-18.ec2.internal   <none>           <none>
+khalidpod-1    1/1     Running   0          14m     192.168.36.3     ip-172-31-89-48.ec2.internal   <none>           <none>
+manishapod-1   1/1     Running   0          15m     192.168.10.132   ip-172-31-85-18.ec2.internal   <none>           <none>
+sushil-pod     1/1     Running   0          12m     192.168.36.4     ip-172-31-89-48.ec2.internal   <none>           <none>
+varunpod-1     1/1     Running   0          5m49s   192.168.10.134   ip-172-31-85-18.ec2.internal   <none>           <none>
+vishnupod-1    1/1     Running   0          12m     192.168.36.5     ip-172-31-89-48.ec2.internal   <none>           <none>
+
+```
+
+### accessing a container inside pod 
+
+```
+❯ kubectl  exec -it  ashupod-1    -- bash
+[root@ashupod-1 /]# 
+[root@ashupod-1 /]# 
+[root@ashupod-1 /]# cat /etc/os-release 
+NAME="CentOS Linux"
+VERSION="8"
+ID="centos"
+ID_LIKE="rhel fedora"
+VERSION_ID="8"
+PLATFORM_ID="platform:el8"
+
+```
+
+### creating alpine POD 
+
+```
+kubectl apply -f alpp.yml 
+❯ kubectl  logs -f  ashupod111
+PING google.com (172.217.164.142): 56 data bytes
+64 bytes from 172.217.164.142: seq=0 ttl=108 time=0.688 ms
+64 bytes from 172.217.164.142: seq=1 ttl=108 time=0.737 ms
+64 bytes from 172.217.164.142: seq=2 ttl=108 time=0.759 ms
+64 bytes from 172.217.164.142: seq=3 ttl=108 time=0.743 ms
+64 bytes from 172.217.164.142: seq=4 ttl=108 time=0.
+
+```
 
 
