@@ -527,4 +527,161 @@ spec:
     name: sushil-assignment-c1
 
 ```
+## AUto generate YAML 
+
+```
+❯ kubectl  run  ashupod3  --image=dockerashu/ashuhttp:ciscowebv1   --port=80  --dry-run=client  -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod3
+  name: ashupod3
+spec:
+  containers:
+  - image: dockerashu/ashuhttp:ciscowebv1
+    name: ashupod3
+    ports:
+
+
+```
+
+### JSOn out 
+
+```
+kubectl  run  ashupod3  --image=dockerashu/ashuhttp:ciscowebv1   --port=80  --dry-run=client  -o json
+{
+    "kind": "Pod",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "ashupod3",
+        "creationTimestamp": null,
+        "labels": {
+            "run": "ashupod3"
+        }
+    },
+    "spec": {
+
+
+```
+
+### generate YAML and store ouput in a file 
+
+```
+❯ kubectl  run  ashupod3  --image=dockerashu/ashuhttp:ciscowebv1   --port=80  --dry-run=client  -o yaml  >mypod.yml
+❯ 
+❯ ls
+ashupod1.yaml mypod.yml     webpo.yml
+
+```
+
+###
+
+```
+10073  kubectl  run  ashupod3  --image=dockerashu/ashuhttp:ciscowebv1   --port=80  --dry-run=client  -o yaml 
+10074  kubectl  run  ashupod3  --image=dockerashu/ashuhttp:ciscowebv1   --port=80  --dry-run=client  -o json 
+10075  history
+10076  kubectl  run  ashupod3  --image=dockerashu/ashuhttp:ciscowebv1   --port=80  --dry-run=client  -o yaml  >mypod.yml
+
+```
+
+
+### Deleting single POD 
+
+```
+❯ kubectl  delete  pod ashupod-1
+pod "ashupod-1" deleted
+
+
+```
+
+### deleting all the pods
+
+```
+❯ kubectl  delete  pod  --all
+pod "ashipod-1" deleted
+pod "ashishpod111" deleted
+pod "ashupod111" deleted
+pod "derpaulpod1" deleted
+pod "derpaulpod111" deleted
+pod "khalidpod-1" 
+
+```
+
+### deploy pod 
+
+```
+❯ ls
+ashupod1.yaml mypod.yml     webpo.yml
+❯ kubectl  apply -f  mypod.yml
+pod/ashupod3 created
+❯ kubectl get  pods
+NAME       READY   STATUS    RESTARTS   AGE
+ashupod3   1/1     Running   0          7s
+
+
+```
+
+### accessing application running in a POD 
+
+<img src"access.png">
+
+### accessing from k8s client machine 
+
+```
+❯ kubectl  port-forward  ashupod3   1122:80
+Forwarding from 127.0.0.1:1122 -> 80
+Forwarding from [::1]:1122 -> 80
+Handling connection for 1122
+Handling connection for 1122
+
+
+```
+
+## Welome to kubernetes networking 
+
+### Services 
+
+<img src="services.png">
+
+### service can't user name and IP of POD 
+
+<img src="svc2pod.png">
+
+### service will use label to find Pod 
+
+<img src="svc2lbpod.png">
+
+### service  type 
+
+<img src="stype.png">
+
+### checking label of POD 
+
+```
+❯ kubectl  get  po  ashupod3 --show-labels
+NAME       READY   STATUS    RESTARTS   AGE   LABELS
+ashupod3   1/1     Running   0          37m   x=helloashuapp1
+
+
+```
+
+### for all POds 
+
+```
+❯ kubectl  get  po   --show-labels
+NAME           READY   STATUS    RESTARTS   AGE    LABELS
+ashupod3       1/1     Running   0          38m    x=helloashuapp1
+derpaulpod3    1/1     Running   0          35m    run=derpaulpod3
+khalidpod111   1/1     Running   0          36m    <none>
+khalidpod3     1/1     Running   0          105s   run=khalidpod3,x=hellokhalidapp1
+manishapod3    1/1     Running   0          37m    run=manishapod3
+sushilpod1     1/1     Running   0          36m    run=sushilpod1
+varunpod2      1/1     Running   0          36m    run=varunpod2
+vishnupod-1    1/1     Running   0          23s    x=vishnuapp-1
+
+```
+
+
 
