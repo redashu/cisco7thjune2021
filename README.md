@@ -156,3 +156,13 @@ services:
 
 ```
 
+
+## Docker Engine is not a good fit to deploy production grade application issues 
+
+<img src="orch.png">
+
+## Container orchestration tools 
+
+<img src="tools.png">
+
+
