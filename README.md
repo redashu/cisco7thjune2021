@@ -6,7 +6,7 @@
 
 ## Compose file version 
 
-<img src="compsoefile.png">
+<img src="composefile.png">
 
 
 ### link for version of file 
