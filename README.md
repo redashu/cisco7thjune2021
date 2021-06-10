@@ -273,5 +273,84 @@ No resources found in ashu-apps namespace.
 
 ```
 
+# REplication Controller  RC 
+
+<img src="rc.png">
+
+## cleaning up namespace 
+
+```
+ kubectl  get  all
+NAME           READY   STATUS    RESTARTS   AGE
+pod/ashupod3   1/1     Running   0          108m
+
+NAME               TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/ashusvc2   NodePort   10.108.101.91   <none>        1234:32331/TCP   108m
+❯ kubectl  delete  all  --all
+pod "ashupod3" deleted
+service "ashusvc2" deleted
+
+```
+
+### Creating RC 
+
+<img src="rc1.png">
+
+```
+❯ kubectl  apply -f  ashurc.yaml
+replicationcontroller/ashu-rc-1 created
+❯ kubectl  get   rc
+NAME          DESIRED   CURRENT   READY   AGE
+ashu-rc-1     1         1         1       23s
+sushil-rc-1   1         1         1       5s
+
+
+❯ kubectl  get   po
+NAME              READY   STATUS    RESTARTS   AGE
+ashu-rc-1-tk6sj   1/1     Running   0          58s
+❯ kubectl delete  pod ashu-rc-1-tk6sj
+pod "ashu-rc-1-tk6sj" deleted
+❯ kubectl  get   po
+NAME              READY   STATUS    RESTARTS   AGE
+ashu-rc-1-kvjzg   1/1     Running   0          7s
+
+
+```
+
+###  another way to create service 
+
+<img src="scalecon.png">
+
+### manual pod scaling 
+
+```
+❯ kubectl  get  rc
+NAME        DESIRED   CURRENT   READY   AGE
+ashu-rc-1   1         1         1       16m
+❯ kubectl  apply -f  ashurc.yaml
+replicationcontroller/ashu-rc-1 configured
+service/ashusvc1 configured
+❯ kubectl  get  rc
+NAME        DESIRED   CURRENT   READY   AGE
+ashu-rc-1   2         2         2       16m
+❯ kubectl  get po
+NAME              READY   STATUS    RESTARTS   AGE
+ashu-rc-1-726q5   1/1     Running   0          12s
+ashu-rc-1-kvjzg   1/1     Running   0          15m
+❯ kubectl  scale  rc  ashu-rc-1  --replicas=5
+replicationcontroller/ashu-rc-1 scaled
+❯ kubectl  get po
+NAME              READY   STATUS    RESTARTS   AGE
+ashu-rc-1-5hw8m   1/1     Running   0          3s
+ashu-rc-1-726q5   1/1     Running   0          71s
+ashu-rc-1-kvjzg   1/1     Running   0          16m
+ashu-rc-1-m45ms   1/1     Running   0          3s
+ashu-rc-1-skgrg   1/1     Running   0          3s
+
+
+```
+
+
+
 
 
