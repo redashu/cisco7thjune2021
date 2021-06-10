@@ -5,6 +5,7 @@ metadata:
   labels: # label of my pod 
     run: ashuflaskpod1 # here key is run and value is ashuflaskpod1
   name: ashuflaskpod1 # name of YOUR pod 
+  namespace: ashu-apps # namespace info 
 spec:
   containers:
   - image: dockerashu/ciscoflask:appv2 # image from Docker hub 

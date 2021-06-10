@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+ namespace: ashu-apps
+ name: ashu-rc-1
+ labels: # label of RC 
+  x: hellorc
+spec: 
+ replicas: 2 # no of PODs 
+ template:  # Template will be used by RC to create number of PODs 
+  metadata:
+   labels: # label of pods 
+    x1: helloashu1
+  spec:
+   containers:
+   - image: dockerashu/ashuhttp:ciscowebv1
+     name: ashuc1
+     ports:
+     - containerPort: 80 
+
+# creating service 
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    x: hellorc
+  name: ashusvc1
+  namespace: ashu-apps 
+spec:
+  ports:
+  - port: 1234
+    protocol: TCP
+    targetPort: 80
+  selector:
+    x1: helloashu1
+  type: NodePort
+status:
+  loadBalancer: {}

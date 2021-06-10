@@ -5,6 +5,7 @@ metadata:
   labels: # label of service 
     app: ashusvc1
   name: ashusvc1 # name of Service 
+  namespace: ashu-apps # name of namespace 
 spec:
   ports:
   - name: 1234-5000
