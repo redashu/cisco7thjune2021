@@ -1,0 +1,10 @@
+apiVersion: v1 # Kubernetes Api version is v1 
+kind: Pod  # requesting something related to POD -- /create/delete /update 
+metadata: # info about any KInd written above 
+ name: ashupod111  # name of pod 
+spec:
+ containers: # info about containers 
+ - name: ashuc1  # name of container 
+   image: alpine  # image from DockerHUb
+   command: ["/bin/sh","-c","ping google.com"]
+   

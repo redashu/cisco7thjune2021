@@ -1,0 +1,22 @@
+version: "3.8"
+volumes: # creating volume 
+    ashudbvol: 
+services:
+    ashuapp1: # name of service
+     image: alpine
+     command: ping fb.com
+     container_name: ashuc1  
+     restart: always
+    ashuapp2: # name of service 
+     image: nginx
+     container_name: ashuc2
+     ports:
+        - "1234:80"
+    ashudbsvc1: # name of service
+     image: mysql
+     container_name: ashuc3
+     environment:
+        MYSQL_ROOT_PASSWORD: "CiscoDb099"
+     volumes: # using volumes 
+        - ashudbvol:/var/lib/mysql/
+      
