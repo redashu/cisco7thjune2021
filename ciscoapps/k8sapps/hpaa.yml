@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: webapp
+  name: webapp
+  namespace: ashu-apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+  strategy: {}
+  template: # template for pod creationg 
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+        - containerPort: 80
+        resources: 
+         requests: # a default resources that pod can ask from K8s 
+          cpu: 256m # mili core  1 vcpu -- 1000Milicore 
+          memory: 200Mi # 1 GB == 1000Mi 
+         limits:
+          cpu: 512m
+          memory: 512Mi 
+status: {}
