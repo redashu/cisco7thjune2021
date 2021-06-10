@@ -1,1 +1,7 @@
-# cisco7thjune2021
+# QUick revision 
+
+
+## PYthon flask and JSP based application 
+
+<img src="rev.png">
+
