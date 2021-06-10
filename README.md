@@ -350,6 +350,40 @@ ashu-rc-1-skgrg   1/1     Running   0          3s
 
 ```
 
+## Overall to deploy application in form of POD -- we use Deployments
+
+# Deployment 
+
+<img src="dep.png">
+
+### Deployment  reality 
+
+<img src="depreal.png">
+
+
+### Deployment of deployment 
+
+```
+❯ kubectl  apply -f  ashudep1.yaml
+deployment.apps/ashudep1 created
+service/ashusvc1 created
+❯ kubectl  get  deploy
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+ashudep1   1/1     1            1           11s
+❯ kubectl  get  rs
+NAME                  DESIRED   CURRENT   READY   AGE
+ashudep1-766f5b7789   1         1         1       19s
+❯ kubectl  get  pod
+NAME                        READY   STATUS    RESTARTS   AGE
+ashudep1-766f5b7789-tcm6w   1/1     Running   0          24s
+❯ kubectl  get  svc
+NAME       TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
+ashusvc1   NodePort   10.99.19.12   <none>        1234:32396/TCP   28s
+
+
+
+```
+
 
 
 
