@@ -384,6 +384,82 @@ ashusvc1   NodePort   10.99.19.12   <none>        1234:32396/TCP   28s
 
 ```
 
+### NOdeport & Loadbalancer they are same in non cloud based k8s 
+
+```
+❯ kubectl  get  deploy
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+ashudep1   2/2     2            2           45m
+❯ kubectl  get  svc
+NAME       TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
+ashusvc1   NodePort   10.99.19.12   <none>        1234:32396/TCP   45m
+❯ kubectl  expose deployment ashudep1  --type LoadBalancer  --port 1234 --target-port 80 --name ashusvc111
+service/ashusvc111 exposed
+❯ kubectl  get  svc
+NAME         TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+ashusvc1     NodePort       10.99.19.12    <none>        1234:32396/TCP   45m
+ashusvc111   LoadBalancer   10.108.107.2   <pending>     1234:30680/TCP   5
+
+```
+
+## loadbalancer type service 
+
+<img src="lb.png">
+
+
+### checking image details 
+
+```
+❯ kubectl  describe  deploy  ashudep1
+Name:                   ashudep1
+Namespace:              ashu-apps
+CreationTimestamp:      Thu, 10 Jun 2021 15:37:29 +0530
+Labels:                 app=ashudep1
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=ashudep1
+Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=ashudep1
+  Containers:
+   ashuhttp:
+    Image:        dockerashu/ashuhttp:ciscowebv1
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:       <none>
+
+```
+
+### setting image in a running deployment 
+
+```
+kubectl   set  image  deployment  ashudep1  ashuhttp=dockerashu/ashuhttp:ciscowebv2
+
+```
+
+## Auto scaling in k8s 
+
+<img src="autoscale.png">
+
+## HPA 
+
+#### Need 1 . Metric server 2. Cgourps in POD 
+
+## link of MEtrics server 
+
+[metrics](https://github.com/kubernetes-sigs/metrics-server)
+
+###  HPA 
+
+```
+10116  kubectl autoscale deployment  webapp  --min=1  --max=30 --cpu-percent=80 
+10117  kubectl  get  hpa
+
+```
+
 
 
 
