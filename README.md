@@ -184,4 +184,94 @@ sushilsvc1   NodePort    10.108.146.240   <none>        1234:30536/TCP   7s
 
 ```
 
+### cleaning up  pods & services 
+
+```
+❯ kubectl  delete all  --all
+pod "ashishflaskpod1" deleted
+pod "ashuflaskpod1" deleted
+pod "derpaulflaskpod1" deleted
+pod "khalidflaskpod1" deleted
+pod "manishaflaskpod1" deleted
+pod "sushil-flask-pod" deleted
+pod "varunflaskpod1" deleted
+pod "vishnuflaskpod1" deleted
+service "ashishsvc1" deleted
+service "ashusvc1" deleted
+service "derpaulsvc1" deleted
+service "khalidsvc1" deleted
+
+```
+
+
+## Namespace information 
+
+<img src="ns.png">
+
+### Default is namespace for everyone first time connecting cluster 
+
+
+### all kubernetes Internal master & Minion COmponent is running as POD 
+
+```
+❯ kubectl  get  pods   -n  kube-system
+NAME                                                   READY   STATUS    RESTARTS   AGE
+calico-kube-controllers-78d6f96c7b-6b5kp               1/1     Running   1          26h
+calico-node-2z4vj                                      1/1     Running   1          26h
+calico-node-kht62                                      1/1     Running   1          26h
+calico-node-tp26t                                      1/1     Running   1          26h
+calico-node-vgtk8                                      1/1     Running   1          26h
+coredns-558bd4d5db-54b4m                               1/1     Running   1          26h
+coredns-558bd4d5db-7x8kc                               1/1     Running   1          26h
+etcd-ip-172-31-82-89.ec2.internal                      1/1     Running   1          26h
+kube-apiserver-ip-172-31-82-89.ec2.internal            1/1     Running   1          26h
+kube-controller-manager-ip-172-31-82-89.ec2.internal   1/1     Running   1          26h
+kube-proxy-25t62                                       1/1     Running   1          26h
+kube-proxy-jw4rm                                       1/1     Running   1          26h
+kube-proxy-lhf8x                                       1/1     Running   1          26h
+kube-proxy-qm5tj                                       1/1     Running   1          26h
+kube-scheduler-ip-172-31-82-89.ec2.internal            1/1     Running   1          26h
+
+```
+
+### creating namespace 
+
+```
+❯ kubectl  create   namespace   ashu-apps   --dry-run=client  -o yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: ashu-apps
+spec: {}
+status: {}
+❯ kubectl  create   namespace   ashu-apps
+namespace/ashu-apps created
+❯ kubectl  get   ns
+NAME                   STATUS   AGE
+ashu-apps              Active   9s
+default                Active   26h
+kube-node-lease        Active   26h
+kube-public            Active   26h
+kube-system            Active   26h
+
+
+```
+
+### Default namespace setting 
+
+```
+❯ kubectl  config  set-context    --current  --namespace=ashu-apps
+Context "kubernetes-admin@kubernetes" modified.
+❯ 
+❯ kubectl  config get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   ashu-apps
+          minikube                      minikube     minikube           default
+❯ kubectl  get  po
+No resources found in ashu-apps namespace.
+
+```
+
+
 
