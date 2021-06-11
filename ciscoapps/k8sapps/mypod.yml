@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels: # to define label of POD  key: value pair 
+    x: helloashuapp1 # here x is a key and helloashuapp1 is value 
+  name: ashupod3 # name of POD 
+spec:
+  #nodeName: ip-172-31-89-48.ec2.internal # manual scheduling 
+  containers:
+  - image: dockerashu/ashuhttp:ciscowebv1 # docker image 
+    name: ashupod3 # name of container 
+    ports: # container APP port number 
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always # Restart policy of Pod 
+  #nodeSelector:
+  #  key: value 
+status: {}

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudep1
+  name: ashudep1
+  namespace: ashu-apps
+spec:
+  replicas: 1 # number of POD 
+  selector:
+    matchLabels:
+      app: ashudep1
+  strategy: {}
+  template: # Deployment will also template to create pod 
+    metadata:
+      creationTimestamp: null
+      labels: # label of POD 
+        app: ashudep1
+    spec:
+      containers:
+      - image: dockerashu/ashuhttp:ciscowebv2 # docker image 
+        name: ashuhttp # name of container 
+        resources: {}
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1
+  namespace: ashu-apps
+spec:
+  ports:
+  - name: 1234-80
+    port: 1234
+    protocol: TCP
+    targetPort: 80
+  selector: # PodFInder
+    app: ashudep1 # label of POD 
+  type: NodePort
+status:
+  loadBalancer: {}
