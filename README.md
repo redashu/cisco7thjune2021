@@ -93,4 +93,186 @@ data.txt
 <img src="multicpod.png">
 
 
+### accessing container 
+
+```
+❯ kubectl exec  -it  ashupod11  --  bash
+Defaulted container "ashuwebc1" out of: ashuwebc1, ashupod11
+root@ashupod11:/# 
+root@ashupod11:/# cat  /etc/os-release 
+PRETTY_NAME="Debian GNU/Linux 10 (buster)"
+NAME="Debian GNU/Linux"
+VERSION_ID="10"
+VERSION="10 (buster)"
+VERSION_CODENAME=buster
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+root@ashupod11:/# cd /usr/share/nginx/html/
+root@ashupod11:/usr/share/nginx/html# ls
+data.txt
+root@ashupod11:/usr/share/nginx/html# rm data.txt 
+rm: cannot remove 'data.txt': Read-only file system
+root@ashupod11:/usr/share/nginx/html# cat  data.txt 
+Fri Jun 11 06:40:06 UTC 2021
+Fri Jun 11 06:40:11 UTC 2021
+
+
+====
+
+10051  kubectl exec  -it  ashupod11  --  bash 
+10052  kubectl exec  -it  ashupod11 -c  ashupod11  --  sh  
+
+```
+
+
+### svc creation using expose of POD 
+
+```
+❯ kubectl  get  po  --show-labels
+NAME        READY   STATUS    RESTARTS   AGE     LABELS
+ashupod11   2/2     Running   0          9m56s   run=ashupod11
+❯ kubectl  expose  pod ashupod11  --type LoadBalancer   --port 80   --name ashusvc1
+service/ashusvc1 exposed
+❯ kubectl get  svc
+NAME       TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+ashusvc1   LoadBalancer   10.97.52.166   <pending>     80:32405/TCP   8s
+
+
+```
+
+
+## Demo of two pod microservice 
+
+<img src="app.png">
+
+### Introduction to secret 
+
+<img src="sec.png">
+
+### creating secret 
+
+```
+❯ kubectl   create  secret   generic  ashusec1   --from-literal  sqlpd=CiscoDB087
+secret/ashusec1 created
+❯ kubectl  get  secret
+NAME                  TYPE                                  DATA   AGE
+ashusec1              Opaque                                1      10s
+
+```
+
+### Deploydb POD using deployment 
+
+```
+❯ kubectl  apply -f  microsvcdemo.yaml --dry-run=client
+deployment.apps/ashudb created (dry run)
+❯ kubectl  apply -f  microsvcdemo.yaml
+deployment.apps/ashudb created
+
+```
+
+### creating endpoint for DB pod
+
+```
+ kubectl  expose  deployment  ashudb  --type ClusterIP --port 3306 --namespace ashu-apps  --dry-run=client -o yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudb
+  name: ashudb
+  namespace: ashu-apps
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: ashudb
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+
+```
+
+### creating service 
+
+```
+❯ kubectl apply -f  microsvcdemo.yaml
+Warning: resource deployments/ashudb is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by kubectl apply. kubectl apply should only be used on resources created declaratively by either kubectl create --save-config or kubectl apply. The missing annotation will be patched automatically.
+deployment.apps/ashudb configured
+service/ashudb created
+❯ 
+❯ kubectl  get deploy
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+ashudb   1/1     1            1           7m48s
+❯ kubectl  get pod
+NAME                     READY   STATUS    RESTARTS   AGE
+ashudb-b99788cd4-v9lc9   1/1     Running   0          7m54s
+❯ kubectl  get svc
+NAME     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+ashudb   ClusterIP   10.110.137.95   <none>        3306/TCP   35s
+
+```
+
+
+### creating deployment for webapp 
+
+```
+❯ kubectl  create  deployment  mywebapp  --image=wordpress:4.8-apache --namespace ashu-space --dry-run=client -o yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mywebapp
+  name: mywebapp
+  namespace: ashu-space
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mywebapp
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mywebapp
+    spec:
+      containers:
+      - image: wordpress:4.8-apache
+        name: wordpress
+        resources: {}
+status: {}
+
+
+```
+
+### final deployment 
+
+```
+❯ kubectl apply -f  microsvcdemo.yaml
+deployment.apps/ashudb configured
+service/ashudb configured
+deployment.apps/mywebapp configured
+service/websvc1 created
+❯ kubectl  get  deploy,pod,svc
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/ashudb     1/1     1            1           88m
+deployment.apps/mywebapp   1/1     1            1           2m4s
+
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/ashudb-b99788cd4-v9lc9      1/1     Running   0          88m
+pod/mywebapp-6f678f8dcb-wv5d6   1/1     Running   0          2m5s
+
+NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/ashudb    ClusterIP   10.110.137.95   <none>        3306/TCP       80m
+service/websvc1   NodePort    10.106.89.131   <none>        80:32039/TCP   9s
+
+```
+
 
