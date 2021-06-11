@@ -286,8 +286,75 @@ service/websvc1   NodePort    10.106.89.131   <none>        80:32039/TCP   9s
 
 ## links for YAML and rules for NEtwork policy 
 
-[github](https://github.com/ahmetb/kubernetes-network-policy-recipes)
+[github](https://github.com/ahmetb/kubernetes-network-policy-recipes) <br/>
 [calico_official](https://docs.projectcalico.org/security/kubernetes-network-policy)
+
+## k8s  cluster security best practice. ---
+
+<img src="secb.png">
+
+## Service Account info 
+
+```
+❯ kubectl  config  get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   ashu-apps
+          minikube                      minikube     minikube           default
+❯ kubectl   get  serviceaccount
+NAME      SECRETS   AGE
+default   1         27h
+❯ kubectl   get  sa
+NAME      SECRETS   AGE
+default   1         27h
+❯ 
+❯ kubectl   get  secret
+NAME                  TYPE                                  DATA   AGE
+ashusec1              Opaque                                1      160m
+default-token-68247   kubernetes.io/service-account-token   3      27h
+❯ kubectl   describe   secret  default-token-68247
+Name:         default-token-68247
+Namespace:    ashu-apps
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: default
+              kubernetes.io/service-account.uid: 8c579bb3-30b3-4ed7-92c2-6fcfb007c5a0
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+ca.crt:     1066 bytes
+namespace:  9 bytes
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6InhXV19PU0JVSkJYYm9BV21ieXhNUF9VdmI5T1hZQy0zcHdKTXFIQXp5VzgifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZ
+
+```
+
+## Creating a. restricted access for particular user or team 
+
+### checking config file 
+
+```
+❯ kubectl  config  view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://52.73.214.189:6443
+  name: kubernetes
+- cluster:
+    certificate-authority: /Users/fire/.minikube/ca.crt
+    extensions:
+    - extension:
+        last-update: Wed, 09 Jun 2021 13:41:46 IST
+        provider: minikube.sigs.k8s.io
+        version: v1.20.0
+      name: cluster_info
+
+```
+
+
+### ABove file is not having any permission bcz service account got created very new 
+
+## Creating role for specific namespace
 
 
 
