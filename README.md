@@ -357,4 +357,80 @@ clusters:
 ## Creating role for specific namespace
 
 
+## RBAC 
+
+<img src="rbac.png">
+
+## Deploy k8s dashboard 
+
+```
+❯ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
+namespace/kubernetes-dashboard created
+serviceaccount/kubernetes-dashboard created
+service/kubernetes-dashboard created
+secret/kubernetes-dashboard-certs created
+secret/kubernetes-dashboard-csrf created
+secret/kubernetes-dashboard-key-holder created
+configmap/kubernetes-dashboard-settings created
+role.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard unchanged
+rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard unchanged
+deployment.apps/kubernetes-dashboard created
+service/dashboard-metrics-scraper created
+deployment.apps/dashboard-metrics-scraper created
+
+
+```
+
+### exploring dashboard 
+
+```
+❯ kubectl  get  deploy  -n  kubernetes-dashboard
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+dashboard-metrics-scraper   1/1     1            1           43s
+kubernetes-dashboard        1/1     1            1           45s
+❯ 
+❯ kubectl  get po   -n  kubernetes-dashboard
+NAME                                         READY   STATUS    RESTARTS   AGE
+dashboard-metrics-scraper-856586f554-642x8   1/1     Running   0          52s
+kubernetes-dashboard-78c79f97b4-pzwgh        1/1     Running   0          54s
+❯ kubectl  get svc    -n  kubernetes-dashboard
+NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+dashboard-metrics-scraper   ClusterIP   10.103.163.156   <none>        8000/TCP   61s
+kubernetes-dashboard        ClusterIP   10.101.188.173   <none>        443/TCP    68s
+❯ kubectl  get sa     -n  kubernetes-dashboard
+NAME                   SECRETS   AGE
+default                1         83s
+kubernetes-dashboard   1         82s
+❯ kubectl  get secret     -n  kubernetes-dashboard
+NAME                               TYPE                                  DATA   AGE
+default-token-22cts                kubernetes.io/service-account-token   3      93s
+kubernetes-dashboard-certs         Opaque                                0      90s
+kubernetes-dashboard-csrf          Opaque                                1      90s
+kubernetes-dashboard-key-holder    Opaque                                2      89s
+kubernetes-dashboard-token-zg55b   kubernetes.io/service-account-token   3      92s
+
+```
+
+## Dashboard history 
+
+```
+10257  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
+10258  kubectl  get  ns
+10259  kubectl  get  deploy  -n  kubernetes-dashboard 
+10260  kubectl  get po   -n  kubernetes-dashboard 
+10261  kubectl  get svc    -n  kubernetes-dashboard 
+10262  kubectl  get sa     -n  kubernetes-dashboard 
+10263  kubectl  get secret     -n  kubernetes-dashboard 
+10264  kubectl  get svc    -n  kubernetes-dashboard 
+10265  kubectl  edit  svc  kubernetes-dashboard   -n  kubernetes-dashboard 
+10266  kubectl  get svc    -n  kubernetes-dashboard 
+10267  kubectl  get sa    -n  kubernetes-dashboard 
+10268  kubectl  get secret    -n  kubernetes-dashboard 
+10269  kubectl  describe  secret  kubernetes-dashboard-token-zg55b    -n  kubernetes-dashboard 
+
+```
+
+
 
