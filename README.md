@@ -1,1 +1,4 @@
-# cisco7thjune2021
+## Cname COncept in DNS with K8s 
+
+<img src="k8scname.png">
+
