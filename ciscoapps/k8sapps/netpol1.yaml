@@ -1,0 +1,11 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+ namespace: ashu-apps
+ name: deny-all-pod
+spec: 
+ podSelector:
+  matchLabels: {} # selecting all pods 
+ policyTypes:
+ - Ingress # any incoming connectiong bcz i am not defining any rule
+ - Egress # any outgoing connection

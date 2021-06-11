@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+ namespace: python-project
+ name: mybinding
+subjects:
+- kind: ServiceAccount
+  name: default
+roleRef:
+ kind: Role
+ name: pod-reader
+ apiGroup: ""

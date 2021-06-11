@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+ namespace: ashu-apps
+ name: forsinglepod
+spec: 
+ podSelector:
+  matchLabels: # where to apply policy 
+   run: p1 # this is label of POD where to apply policy 
+ ingress:  # ingress rules for POD 
+ - from: 
+   - podSelector: 
+      matchLabels: # Source from where we want to allow connectiong
+       run: p3
+
+
+ 
