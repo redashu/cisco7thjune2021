@@ -275,4 +275,19 @@ service/websvc1   NodePort    10.106.89.131   <none>        80:32039/TCP   9s
 
 ```
 
+# Security view in k8s 
+
+<img src="sec.png">
+
+## Pre-requisite to enforce network policy in k8s 
+
+<img src="netpol.png">
+
+
+## links for YAML and rules for NEtwork policy 
+
+[github](https://github.com/ahmetb/kubernetes-network-policy-recipes)
+[calico_official](https://docs.projectcalico.org/security/kubernetes-network-policy)
+
+
 
